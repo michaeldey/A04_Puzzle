@@ -1,55 +1,81 @@
 package puzzle;
 
+import java.io.IOException;
+
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Board {
 	
-	private int[] tiles;
+	private int[][] tiles;	//Array to hold puzzle
+	private int N; 			//size puzzle side (puzzle is N by N)
+	private int[] oneDArray;	//one dimensional version of tiles
 	
 
 	// construct a board from an N-by-N array of blocks
 	// (where blocks[i][j] = block in row i, column j)
-    public Board(int[][] blocks) {
+    public Board(int[][] blocks) 
+    {
+    	if (blocks[0].length != blocks[1].length)
+    	{
+    		throw new java.lang.Error("Puzzle width must match Puzzle height");
+    	}
+    	this.N = blocks[0].length;	//set width of the puzzle side
+    	tiles = blocks;				//set the size of tiles
     	
+    	    	
+    	//load oneDArray
+    	oneDArray = new int[size()];
+    	int pointer = 0;
+    	for (int i = 0; i<N; i++)
+    	{
+    		for (int j=0; j<N; j++)
+    		{
+    			oneDArray[pointer++]= tiles[i][j];
+    		}
+    	}
+    	System.out.print("oneDArray:");
+    	for (int m : oneDArray){
+    		System.out.print(m);
+    	}
+    	System.out.println();
     }
     
-   private int[][] node(int[] orignialArray) {
-	
-	   
-	   return null;
-	   
+   private int[][] node(int[] orignialArray) 
+   {	   
+	   return null;	   
    }
     
     // board size N
-    public int size() {
-		return tiles.length;
-    	
+    public int size()
+    {
+		return (tiles[0].length * tiles[1].length);  //this works because tiles[][] should be N by N  	
     }
     
     // number of blocks out of place
-    public int hamming() {
-		return 0;
-    	
+    public int hamming()
+    {
+		//todo
+    	return 0;    	
     }
     
     // sum of Manhattan distances between blocks and goal
-    public int manhattan() {
-    	
-    	
-		return 0;
-    	
+    public int manhattan() 
+    {    	
+    	//todo
+		return 0;    	
     }
     
     // is this board the goal board?   
-    public boolean isGoal() {
-		return hamming() == 0;
-    	
+    public boolean isGoal() 
+    {
+    	//todo
+		return hamming() == 0;    	
     }
     
     // is this board solvable?
-    public boolean isSolvable() {
-    	
+    public boolean isSolvable() 
+    {    	
     	if (size() % 2 != 0) {
     		// inversions are even its true
     	} else {
@@ -62,17 +88,16 @@ public class Board {
     
 	// does this board equal y?
     @Override
-    public boolean equals(Object y) {
-    	
-    	
-		return false;
-    
+    public boolean equals(Object y) 
+    { 	
+    	//todo
+    	return false;    
     }
     
     // all neighboring boards
-    public Iterable<Board> neighbors() {
-		return null;
-    	
+    public Iterable<Board> neighbors() 
+    {
+		return null;    	
     }
     
     // string representation of this board (in the output format specified below)
@@ -85,65 +110,35 @@ public class Board {
     			s.append(String.format("%2d ", tiles[i][j]));
     		}
     		s.append("\n");
-    	}
-    	   
-    	return s.toString();
-    	
+    	}    	   
+    	return s.toString(); 	
     
+    }
+    
+    //calculate the number of inversions
+    private int inversions(){
+    	int high = size()-1; 	//size of the largest int on the board (-1 to account for the 0)
+    	int inversions = 0;
+    	for (int i = 0; i<high;i++)
+    	{
+    		for (int j = i+1; j <= high; j++)
+    		{
+    			if (oneDArray[j] < oneDArray[i]) inversions++;
+    		}
+    	}
+    	return inversions;
     }
     
     // unit tests (not graded)
     public static void main(String[] args) {
-
-    }
-}
-
-
-
-
-
-
-	
-	// find a solution to the initial board (using the A* algorithm)
-    public Solver(Board initial) {
+    	int[][] testArray = {{1,2,3,4},{5,0,6,8},{9,10,7,11},{13,14,15,12}};	//create 3 by 3 array
+    	Board testBoard = new Board(testArray);
+    	System.out.println("Size: " + testBoard.size());	//test size method
     	
-    }
-    
-    // min number of moves to solve initial board
-    public int moves() {
-		return 0;
+    	System.out.print("inversions:");
+    	System.out.println(testBoard.inversions());
     	
-    }
-    
-	// sequence of boards in a shortest solution
-    public Iterable<Board> solution() {
-		return null;
-    
-    }
-    
-	// solve a slider puzzle (given below) 
-    public static void main(String[] args) {
-
-        // create initial board from file
-        In in = new In(args[0]);
-        int N = in.readInt();
-        int[][] blocks = new int[N][N];
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++)
-                blocks[i][j] = in.readInt();
-        Board initial = new Board(blocks);
-
-        // check if puzzle is solvable; if so, solve it and output solution
-        if (initial.isSolvable()) {
-            Solver solver = new Solver(initial);
-            StdOut.println("Minimum number of moves = " + solver.moves());
-            for (Board board : solver.solution())
-                StdOut.println(board);
-        }
-
-        // if not, report unsolvable
-        else {
-            StdOut.println("Unsolvable puzzle");
-        }
-        
-    }
+    	
+    	
+    }//end of main
+}//end of Board
