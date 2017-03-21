@@ -22,24 +22,10 @@ public class Board {
     	}
     	this.N = blocks[0].length;	//set width of the puzzle side
     	tiles = blocks;				//set the size of tiles
-    	
-    	    	
-    	//load oneDArray
-    	oneDArray = new int[size()];
-    	int pointer = 0;
-    	for (int i = 0; i<N; i++)
-    	{
-    		for (int j=0; j<N; j++)
-    		{
-    			oneDArray[pointer++]= tiles[i][j];
-    		}
-    	}
-    	System.out.print("oneDArray:");
-    	for (int m : oneDArray){
-    		System.out.print(m);
-    	}
-    	System.out.println();
+
     }
+    	    	
+
     
    private int[][] node(int[] orignialArray) 
    {	   
@@ -115,9 +101,31 @@ public class Board {
     
     }
     
+    //loads oneDArray with current tiles, but omits the 0 for inversion factoring
+    private int[] load1DArray()
+    {
+    	//load oneDArray
+    	oneDArray = new int[size()-1]; //minus 1 to account for skipping the 0
+    	int pointer = 0;
+    	for (int i = 0; i<N; i++)
+    	{
+    		for (int j=0; j<N; j++)
+    		{
+    			//load the array, but skip if the value==0
+    			if (tiles[i][j]!=0)
+    			{
+    				oneDArray[pointer++]=tiles[i][j];
+    			}
+
+    		}
+    	}
+    	return oneDArray;
+    }
+    
     //calculate the number of inversions
     private int inversions(){
-    	int high = size()-1; 	//size of the largest int on the board (-1 to account for the 0)
+    	load1DArray();
+    	int high = oneDArray.length-1; 	//size of the largest int on the board (-1 to account for the 0)
     	int inversions = 0;
     	for (int i = 0; i<high;i++)
     	{
