@@ -27,11 +27,7 @@ public class Board {
     	    	
 
     
-   private int[][] node(int[] orignialArray) 
-   {	   
-	   return null;	   
-   }
-    
+  
     // board size N
     public int size()
     {
@@ -41,15 +37,34 @@ public class Board {
     // number of blocks out of place
     public int hamming()
     {
-		//todo
-    	return 0;    	
+	int value = -1;
+      	for (int i = 0; i < tiles.length; i++) {
+          for (int j = 0; j < tiles[i].length; j++) {
+              if (tiles[i][j] != (i * tiles.length + j + 1)) value++;
+          }
+      }
+      return value;  	
     }
     
     // sum of Manhattan distances between blocks and goal
     public int manhattan() 
     {    	
-    	//todo
-		return 0;    	
+        	
+    	int value = 0;
+    	for (int i = 0; i < tiles.length; i++) {
+    		for (int j = 0; j < tiles[i].length; j++) {
+    			int expectedValue = (i * tiles.length + j + 1);
+    			if (tiles[i][j] != expectedValue && tiles[i][j] != 0) {
+    				int actualValue = tiles[i][j];
+    				actualValue--;
+    				int goalI = actualValue / size();
+    				int goalJ = actualValue % size();
+    				value += Math.abs(goalI - i) + Math.abs(goalJ - j);
+    			}
+    		}
+    	}
+    	return value;   	
+    }	
     }
     
     // is this board the goal board?   
