@@ -10,6 +10,7 @@ public class Board {
 	private int[][] tiles;	//Array to hold puzzle
 	private int N; 			//size puzzle side (puzzle is N by N)
 	private int[] oneDArray;	//one dimensional version of tiles
+	private int zeroRow; 		//holds Y position of 0 value
 	
 
 	// construct a board from an N-by-N array of blocks
@@ -65,7 +66,7 @@ public class Board {
     	}
     	return value;   	
     }	
-    }
+    
     
     // is this board the goal board?   
     public boolean isGoal() 
@@ -76,12 +77,26 @@ public class Board {
     
     // is this board solvable?
     public boolean isSolvable() 
-    {    	
-    	if (size() % 2 != 0) {
-    		// inversions are even its true
-    	} else {
-    		// inversions plus location row of 0 is odd true
-    	} 
+    {   
+    	//odd size board (N) && odd number of inversions == not solvable
+    	//odd size board (N) && even number of inversion == solvable
+    	//even size board (N): Sum of (blank ROW location of 0) + number of inversions == EVEN Number:  not solvable
+    	//even size board (N): Sum of (blank ROW location of 0) + number of inversions == ODD Number: solvable
+    	
+    	boolean evenInversions = (inversions()%2==0); //evenInversions = True if # inversions is Even number, false if Odd number
+    	
+    	if (size() %2!=0 && evenInversions)//size is ODD and inversions is EVEN (Solvable)
+    	{
+    		return true;
+    	} else if (size()%2==0 )//size is EVEN
+    	{
+			 //even Inversions + Odd row == Odd number (Solvable)
+			 //odd Inversions + even row == Odd number (Solvable)
+    		if ((evenInversions && (zeroRow%2!=0))||(!evenInversions && (zeroRow%2==0)))
+    		{
+    			return true;
+    		}    		
+    	}
     		
 		return false;
     	
@@ -130,8 +145,10 @@ public class Board {
     			if (tiles[i][j]!=0)
     			{
     				oneDArray[pointer++]=tiles[i][j];
+    			}else
+    			{
+    				zeroRow = i; //set 0 point for testing solvable on Even Rows
     			}
-
     		}
     	}
     	return oneDArray;
@@ -154,13 +171,15 @@ public class Board {
     
     // unit tests (not graded)
     public static void main(String[] args) {
-    	int[][] testArray = {{1,2,3,4},{5,0,6,8},{9,10,7,11},{13,14,15,12}};	//create 3 by 3 array
+//    	int[][] testArray = {{1,2,3},{4,6,7},{8,5,0}};	//create 3 by 3 array
+    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,0,11},{13,14,15,12}};	//create 3 by 3 array
     	Board testBoard = new Board(testArray);
     	System.out.println("Size: " + testBoard.size());	//test size method
     	
     	System.out.print("inversions:");
     	System.out.println(testBoard.inversions());
-    	
+    	System.out.println("Zero Row: " + testBoard.zeroRow);
+    	System.out.println("Solvable: " + testBoard.isSolvable());    	
     	
     	
     }//end of main
