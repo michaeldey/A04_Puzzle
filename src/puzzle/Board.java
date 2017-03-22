@@ -149,8 +149,6 @@ public class Board {
     			{
     				zeroRow = i; //set 0 point for testing solvable on Even Rows
     			}
-    			
-
     		}
     	}
     	return oneDArray;
@@ -181,8 +179,7 @@ public class Board {
     	System.out.print("inversions:");
     	System.out.println(testBoard.inversions());
     	System.out.println("Zero Row: " + testBoard.zeroRow);
-    	System.out.println("Solvable: " + testBoard.isSolvable());
-    	
+    	System.out.println("Solvable: " + testBoard.isSolvable());    	
     	
     	
     }//end of main
