@@ -171,8 +171,8 @@ public class Board {
     
     // unit tests (not graded)
     public static void main(String[] args) {
-    	int[][] testArray = {{1,2,3},{4,6,7},{8,5,0}};	//create 3 by 3 array
-//    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,0,11},{13,14,15,12}};	//create 3 by 3 array
+//    	int[][] testArray = {{1,2,3},{4,6,7},{8,5,0}};	//create 3 by 3 array
+    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,0,11},{13,14,15,12}};	//create 3 by 3 array
     	Board testBoard = new Board(testArray);
     	System.out.println("Size: " + testBoard.size());	//test size method
     	
