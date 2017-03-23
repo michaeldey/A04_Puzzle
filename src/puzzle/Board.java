@@ -23,12 +23,8 @@ public class Board {
     	}
     	this.N = blocks[0].length;	//set width of the puzzle side
     	tiles = blocks;				//set the size of tiles
-
     }
-    	    	
-
     
-  
     // board size N
     public int size()
     {
@@ -96,18 +92,16 @@ public class Board {
     		{
     			return true;
     		}    		
-    	}
-    		
-		return false;
-    	
+    	}    		
+		return false;    	
     }
     
 	// does this board equal y?
     @Override
     public boolean equals(Object y) 
     { 	
-    	//todo
-    	return false;    
+    	Board newBoard = (Board)y; //cast y to Board
+    	return this.toString().equals(newBoard.toString());   //if the toString boards are the same, the boards are equal
     }
     
     // all neighboring boards
@@ -179,8 +173,19 @@ public class Board {
     	System.out.print("inversions:");
     	System.out.println(testBoard.inversions());
     	System.out.println("Zero Row: " + testBoard.zeroRow);
-    	System.out.println("Solvable: " + testBoard.isSolvable());    	
+    	System.out.println("Solvable: " + testBoard.isSolvable());  
+    	System.out.println(testBoard);
+    	
+    	//testing equals()
+    	Board testBoard2 = new Board(testArray);
+    	System.out.println("Testing Equals on equal boards:");
+    	System.out.println(testBoard.equals(testBoard2));
     	
     	
+    	//testing equals()
+    	int[][] testArray3 = {{1,2,3},{8,6,7},{4,5,0}};
+    	Board testBoard3 = new Board(testArray3);
+    	System.out.println("Testing Equals on NOT equal boards:");
+    	System.out.println(testBoard.equals(testBoard3));
     }//end of main
 }//end of Board
