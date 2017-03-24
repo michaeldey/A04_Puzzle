@@ -1,6 +1,7 @@
 package puzzle;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
@@ -10,7 +11,8 @@ public class Board {
 	private int[][] tiles;	//Array to hold puzzle
 	private int N; 			//size puzzle side (puzzle is N by N)
 	private int[] oneDArray;	//one dimensional version of tiles
-	private int zeroRow; 		//holds Y position of 0 value
+	private int zeroY; 		//holds Y position of 0 value
+	private int zeroX; 		//holds X position of 0 value
 	
 
 	// construct a board from an N-by-N array of blocks
@@ -22,7 +24,8 @@ public class Board {
     		throw new java.lang.Error("Puzzle width must match Puzzle height");
     	}
     	this.N = blocks[0].length;	//set width of the puzzle side
-    	tiles = blocks;				//set the size of tiles
+    	this.tiles = blocks;				//set the size of tiles
+    	load1DArray();				//loads the oneDArray and sets zeroY and zeroX
     }
     
     // board size N
@@ -88,7 +91,7 @@ public class Board {
     	{
 			 //even Inversions + Odd row == Odd number (Solvable)
 			 //odd Inversions + even row == Odd number (Solvable)
-    		if ((evenInversions && (zeroRow%2!=0))||(!evenInversions && (zeroRow%2==0)))
+    		if ((evenInversions && (zeroY%2!=0))||(!evenInversions && (zeroY%2==0)))
     		{
     			return true;
     		}    		
@@ -104,11 +107,48 @@ public class Board {
     	return this.toString().equals(newBoard.toString());   //if the toString boards are the same, the boards are equal
     }
     
+    private boolean isTop(){return (zeroY==0);}			//returns true if 0 is on top
+    private boolean isBottom(){return (zeroY==(N-1));}	//returns true if 0 is on bottom
+    private boolean isLeft(){return (zeroX==0);}		//returns true if 0 is on left side
+    private boolean isRight(){return (zeroX==(N-1));}	//returns true if 0 is on right side
+    
+    //switchTile clones tiles[][], and switches the value at zeroX,zeroY with value at xSwitch,ySwitch
+    private int[][] switchTile(int xSwitch, int ySwitch)
+    {
+    	int[][] returnValue = tiles.clone(); //make a copy of tiles
+    	returnValue[zeroX][zeroY] = returnValue[xSwitch][ySwitch]; //copy value of xSwitch ySwitch into position of zeroX,zeroY
+    	returnValue[xSwitch][ySwitch]=0;	// copy value of 0 into position xSwitch, ySwitch
+    	return returnValue;
+    }
+    
     // all neighboring boards
     public Iterable<Board> neighbors() 
-    {
-		return null;    	
+    {		
+    	neighborsIterator neighbors = new neighborsIterator();
+    	if (!isTop()){
+    		neighbors.add(new Board(switchTile(zeroX, zeroY-1)));
+    	}
+    	
+    	return (Iterable<Board>) neighbors;    	
     }
+    
+    private class neighborsIterator implements Iterator<Board>
+    {
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public Board next() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+    	
+    }
+    
     
     // string representation of this board (in the output format specified below)
     @Override
@@ -126,7 +166,8 @@ public class Board {
     }
     
     //loads oneDArray with current tiles, but omits the 0 for inversion factoring
-    private int[] load1DArray()
+    //loads Y value of 0 into zeroY, loads X value of 0 into zeroX
+    private void load1DArray()
     {
     	//load oneDArray
     	oneDArray = new int[size()-1]; //minus 1 to account for skipping the 0
@@ -141,16 +182,16 @@ public class Board {
     				oneDArray[pointer++]=tiles[i][j];
     			}else
     			{
-    				zeroRow = i; //set 0 point for testing solvable on Even Rows
+    				zeroY = i; 	//Set Y value of 0 point
+    				zeroX = j;	//Set X value of 0 point
     			}
     		}
     	}
-    	return oneDArray;
     }
     
     //calculate the number of inversions
     private int inversions(){
-    	load1DArray();
+
     	int high = oneDArray.length-1; 	//size of the largest int on the board (-1 to account for the 0)
     	int inversions = 0;
     	for (int i = 0; i<high;i++)
@@ -165,16 +206,17 @@ public class Board {
     
     // unit tests (not graded)
     public static void main(String[] args) {
-//    	int[][] testArray = {{1,2,3},{4,6,7},{8,5,0}};	//create 3 by 3 array
-    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,0,11},{13,14,15,12}};	//create 3 by 3 array
+    	int[][] testArray = {{4,3,1},{7,0,8},{6,5,2}};	//create 3 by 3 array
+//    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,15,11},{13,14,0,12}};	//create 4 by 4 array
     	Board testBoard = new Board(testArray);
     	System.out.println("Size: " + testBoard.size());	//test size method
     	
     	System.out.print("inversions:");
     	System.out.println(testBoard.inversions());
-    	System.out.println("Zero Row: " + testBoard.zeroRow);
+    	System.out.println("Zero Row: " + testBoard.zeroY);
     	System.out.println("Solvable: " + testBoard.isSolvable());  
     	System.out.println(testBoard);
+    	System.out.println("Zero at location: (" + testBoard.zeroX + "," + testBoard.zeroY + ")");
     	
     	//testing equals()
     	Board testBoard2 = new Board(testArray);
@@ -187,5 +229,11 @@ public class Board {
     	Board testBoard3 = new Board(testArray3);
     	System.out.println("Testing Equals on NOT equal boards:");
     	System.out.println(testBoard.equals(testBoard3));
+    	
+    	//test border checks
+    	System.out.println("Top:" + testBoard.isTop());
+    	System.out.println("Bottom:" + testBoard.isBottom());
+    	System.out.println("Left:" + testBoard.isLeft());
+    	System.out.println("Right:" + testBoard.isRight());
     }//end of main
 }//end of Board
