@@ -1,3 +1,8 @@
+/**
+ * @author Chad Seale, Michael Dey
+ * CSIS2420-004-Sp17 - A04 - 8 Puzzle 
+ */
+
 package puzzle;
 
 import java.io.IOException;
@@ -15,9 +20,11 @@ public class Board {
 	private int zeroY; 		//holds Y position of 0 value
 	private int zeroX; 		//holds X position of 0 value
 	
-
-	// construct a board from an N-by-N array of blocks
-	// (where blocks[i][j] = block in row i, column j)
+    /**
+     * @param blocks - int[][] array that represents N by N rectangle of blocks
+     * 
+     * (where blocks[i][j] = block in row i, column j)
+     */
     public Board(int[][] blocks) 
     {
     	if (blocks[0].length != blocks[1].length)
@@ -25,18 +32,26 @@ public class Board {
     		throw new java.lang.Error("Puzzle width must match Puzzle height");
     	}
     	this.N = blocks[0].length;	//set width of the puzzle side
-    	this.tiles = blocks;				//set the size of tiles
-    	load1DArray();				//loads the oneDArray and sets zeroY and zeroX
-    	
+    	this.tiles = blocks;		//set the size of tiles
+    	load1DArray();				//loads the oneDArray and sets zeroY and zeroX    	
     }
-    
-    // board size N
+      
+    /**
+     * @return int representation of array size
+     * 
+     * multiplies width * height
+     * given array must be N by N or this number could be inaccurate
+     */
     public int size()
     {
 		return (tiles[0].length * tiles[1].length);  //this works because tiles[][] should be N by N  	
     }
     
-    // number of blocks out of place
+    /**
+     * @return int value of number of blocks out of place
+     * 
+     * cycles through array and counts # of blocks out of place
+     */
     public int hamming()
     {
 	int value = -1;
@@ -48,10 +63,11 @@ public class Board {
       return value;  	
     }
     
-    // sum of Manhattan distances between blocks and goal
+    /**
+     * @return sum of Manhattan distances between blocks and goal
+     */
     public int manhattan() 
-    {    	
-        	
+    { 	
     	int value = 0;
     	for (int i = 0; i < tiles.length; i++) {
     		for (int j = 0; j < tiles[i].length; j++) {
@@ -67,23 +83,27 @@ public class Board {
     	}
     	return value;   	
     }	
-    
-    
-    // is this board the goal board?   
+     
+    /**
+     * @return boolean value of if board is at goal position
+     * 
+     * calculates hamming, if hamming == 0, goal is achieved
+     */
     public boolean isGoal() 
     {
-    	//todo
 		return hamming() == 0;    	
     }
     
-    // is this board solvable?
+    /**
+     * @return boolean value if board is solvable
+     * 
+     * odd size board (N) && odd number of inversions == not solvable
+     * odd size board (N) && even number of inversion == solvable
+     * even size board (N): Sum of (blank ROW location of 0) + number of inversions == EVEN Number:  not solvable
+     * even size board (N): Sum of (blank ROW location of 0) + number of inversions == ODD Number: solvable
+     */
     public boolean isSolvable() 
-    {   
-    	//odd size board (N) && odd number of inversions == not solvable
-    	//odd size board (N) && even number of inversion == solvable
-    	//even size board (N): Sum of (blank ROW location of 0) + number of inversions == EVEN Number:  not solvable
-    	//even size board (N): Sum of (blank ROW location of 0) + number of inversions == ODD Number: solvable
-    	
+    {
     	boolean evenInversions = (inversions()%2==0); //evenInversions = True if # inversions is Even number, false if Odd number
     	
     	if (size() %2!=0 && evenInversions)//size is ODD and inversions is EVEN (Solvable)
@@ -105,8 +125,8 @@ public class Board {
     @Override
     public boolean equals(Object y) 
     { 	
-    	Board newBoard = (Board)y; //cast y to Board
-    	return this.toString().equals(newBoard.toString());   //if the toString boards are the same, the boards are equal
+    	Board newBoard = (Board)y; 								//cast y to Board
+    	return this.toString().equals(newBoard.toString());   	//if the toString boards are the same, the boards are equal
     }
     
     private boolean isTop(){return (zeroY==0);}			//returns true if 0 is on top
@@ -114,13 +134,15 @@ public class Board {
     private boolean isLeft(){return (zeroX==0);}		//returns true if 0 is on left side
     private boolean isRight(){return (zeroX==(N-1));}	//returns true if 0 is on right side
     
-    //switchTile clones tiles[][], and switches the value at zeroX,zeroY with value at xSwitch,ySwitch
+    /**
+     * @param ySwitch int value of target Y position
+     * @param xSwitch int value of target X position
+     * @return int[][] array with zero position switched with value in target position
+     */
     private int[][] switchTile(int ySwitch, int xSwitch)
     {
-//    	System.out.println("switchTile ln: 1");
-    	int[][] returnValue = new int[N][N]; //make a copy of tiles
-    	
-//    	System.out.println("switchTile ln: 2");
+    	 //make a copy of tiles[][] named "returnValue[][]"
+    	int[][] returnValue = new int[N][N];    	
     	for (int i = 0; i <tiles.length;i++)
     	{
     		for (int j = 0; j<tiles[1].length; j++)
@@ -129,15 +151,23 @@ public class Board {
     		}
     	}
     	
-//    	System.out.println("switchTile ln: 3");
+    	//copy target value returnValue[zeroY][zeroX] into position where 0 resides
+    	//then replace value of returnValue[zeryY][zeroX] with 0
     	int temp = returnValue[ySwitch][xSwitch];
     	returnValue [zeroY][zeroX] = temp;
     	returnValue [ySwitch][xSwitch] = 0;
     	
-    	return returnValue;
+    	return returnValue; //new value to be pushed into neighbors()
     }
     
-    // all neighboring boards
+    /**
+     * @return iterator "neighborsIterator()" containing (up to) all 4 possible next moves
+     * 
+     * calculates if zero resides on top, if not, calculate top switch and push board
+     * calculates if zero resides on bottom, if not, calculate bottom switch and push board
+     * calculates if zero resides on left side, if not, calculate left switch and push board
+     * calculates if zero resides on right side, if not, calculate right switch and push board
+     */
     public Iterable<Board> neighbors() 
     {		
     	neighborsIterator neighbors = new neighborsIterator();
@@ -152,22 +182,24 @@ public class Board {
     	}
     	if (!isRight()){
     		neighbors.push(new Board(switchTile(zeroY, zeroX+1)));//switch zero with tile to the right of it
-    	}
-    	
+    	}    	
     	return neighbors;    	
     }
     
+    /*
+     * helper class to keep track of the 4 next possible moves
+     * this class is modeled after Sedgwick's iterator and linked-list examples
+     */
     private class neighborsIterator <Board> implements Iterable<Board>
     {
-    	private Node firstNode;
-    	
+    	private Node firstNode;    	
     	private class Node
     	{
     		Board item;
     		Node next;
     	}
     	
-    	public Iterator<Board> iterator()  
+    	public Iterator<Board> iterator() //public because you cannot reduce visibilty of inherited Iterator
     	{
     		return new ListIterator();
     	}
@@ -187,7 +219,7 @@ public class Board {
     	{
     		private Node current = firstNode;
             public boolean hasNext()  { return current != null;                     }
-//            public void remove()      { throw new UnsupportedOperationException();  }
+            public void remove()      { throw new UnsupportedOperationException();  }
 
             public Board next() {
                 if (!hasNext()) throw new NoSuchElementException();
@@ -198,7 +230,7 @@ public class Board {
     	}
     }
       
-    // string representation of this board (in the output format specified below)
+    // toString method provided by homework assignment
     @Override
     public String toString() {
     	StringBuilder s = new StringBuilder();
@@ -212,9 +244,11 @@ public class Board {
     	return s.toString(); 	
     
     }
-    
-    //loads oneDArray with current tiles, but omits the 0 for inversion factoring
-    //loads Y value of 0 into zeroY, loads X value of 0 into zeroX
+
+    /**
+     * loads oneDArray with current tiles, but omits the 0 for inversion factoring
+     * loads Y value of 0 into zeroY, loads X value of 0 into zeroX
+     */
     private void load1DArray()
     {
     	//load oneDArray
@@ -229,23 +263,18 @@ public class Board {
     			if (tiles[i][j]!=0)
     			{
     				oneDArray[pointer++]=tiles[i][j];
-//    				System.out.printf("Tile %d %d set to: %d\n", i, j, oneDArray[pointer-1]);
     			}else
     			{    				
     				zeroY = i; 	//Set Y value of 0 point
     				zeroX = j;	//Set X value of 0 point
-//    				System.out.println("Zero points have been set");
     			}
     		}
     	}
-//    	for (int m : oneDArray)
-//    	{
-//    		System.out.print(m + " ");
-//    	}
-//    	System.out.println();
     }
     
-    //calculate the number of inversions
+    /**
+     * @return int value of number of inversions
+     */
     private int inversions(){
 
     	int high = oneDArray.length-1; 	//size of the largest int on the board (-1 to account for the 0)
@@ -265,34 +294,34 @@ public class Board {
 //    	int[][] testArray = {{1,2,3},{4,0,6},{7,8,5}};	//create 3 by 3 array
     	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};	//create 4 by 4 array
     	Board testBoard = new Board(testArray);
-//    	System.out.println("Size: " + testBoard.size());	//test size method
+    	System.out.println("Size: " + testBoard.size());	//test size method
     	
-//    	System.out.print("inversions:");
-//    	System.out.println(testBoard.inversions());
-//    	System.out.println("Zero Row: " + testBoard.zeroY);
-//    	System.out.println("Solvable: " + testBoard.isSolvable());  
-//    	System.out.println(testBoard);
-//    	System.out.println("Zero at location: (" + testBoard.zeroX + "," + testBoard.zeroY + ")");
-//    	
-//    	//testing equals()
-//    	Board testBoard2 = new Board(testArray);
-//    	System.out.println("Testing Equals on equal boards:");
-//    	System.out.println(testBoard.equals(testBoard2));
-//    	
-//    	
-//    	//testing equals()
-//    	int[][] testArray3 = {{1,2,3},{8,6,7},{4,5,0}};
-//    	Board testBoard3 = new Board(testArray3);
-//    	System.out.println("Testing Equals on NOT equal boards:");
-//    	System.out.println(testBoard.equals(testBoard3));
-//    	
-//    	//test border checks
-//    	System.out.println("Top:" + testBoard.isTop());
-//    	System.out.println("Bottom:" + testBoard.isBottom());
-//    	System.out.println("Left:" + testBoard.isLeft());
-//    	System.out.println("Right:" + testBoard.isRight());
+    	System.out.print("inversions:");
+    	System.out.println(testBoard.inversions());
+    	System.out.println("Zero Row: " + testBoard.zeroY);
+    	System.out.println("Solvable: " + testBoard.isSolvable());  
+    	System.out.println(testBoard);
+    	System.out.println("Zero at location: (" + testBoard.zeroX + "," + testBoard.zeroY + ")");
     	
-//    	//Testing iterator
+    	//testing equals()
+    	Board testBoard2 = new Board(testArray);
+    	System.out.println("Testing Equals on equal boards:");
+    	System.out.println(testBoard.equals(testBoard2));
+    	
+    	
+    	//testing equals()
+    	int[][] testArray3 = {{1,2,3},{8,6,7},{4,5,0}};
+    	Board testBoard3 = new Board(testArray3);
+    	System.out.println("Testing Equals on NOT equal boards:");
+    	System.out.println(testBoard.equals(testBoard3));
+    	
+    	//test border checks
+    	System.out.println("Top:" + testBoard.isTop());
+    	System.out.println("Bottom:" + testBoard.isBottom());
+    	System.out.println("Left:" + testBoard.isLeft());
+    	System.out.println("Right:" + testBoard.isRight());
+    	
+    	//Testing iterator
     	System.out.println("Original");
     	System.out.println(testBoard.toString());
     	System.out.println("Testing neighbors");
