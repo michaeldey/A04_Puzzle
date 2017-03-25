@@ -116,7 +116,16 @@ public class Board {
     //switchTile clones tiles[][], and switches the value at zeroX,zeroY with value at xSwitch,ySwitch
     private int[][] switchTile(int xSwitch, int ySwitch)
     {
-    	int[][] returnValue = tiles.clone(); //make a copy of tiles
+    	int[][] returnValue = new int[N][N]; //make a copy of tiles
+    	
+    	for (int i = 0; i <tiles.length;i++)
+    	{
+    		for (int j = 0; j<tiles[1].length; j++)
+    		{
+    			returnValue[i][j]=tiles[i][j];
+    		}
+    	}
+    	
     	returnValue[zeroX][zeroY] = returnValue[xSwitch][ySwitch]; //copy value of xSwitch ySwitch into position of zeroX,zeroY
     	returnValue[xSwitch][ySwitch]=0;	// copy value of 0 into position xSwitch, ySwitch
     	return returnValue;
@@ -127,16 +136,16 @@ public class Board {
     {		
     	neighborsIterator neighbors = new neighborsIterator();
     	if (!isTop()){
-    		neighbors.push(new Board(switchTile(zeroX, zeroY-1)));
+    		neighbors.push(new Board(switchTile(zeroX-1, zeroY))); //switch zero with tile above it
     	}
     	if (!isBottom()){
-    		neighbors.push(new Board(switchTile(zeroX, zeroY+1)));
+    		neighbors.push(new Board(switchTile(zeroX+1, zeroY)));//switch zero with tile below it
     	}
     	if (!isLeft()){
-    		neighbors.push(new Board(switchTile(zeroX-1, zeroY)));
+    		neighbors.push(new Board(switchTile(zeroX, zeroY-1)));//switch zero with tile to the left of it
     	}
     	if (!isRight()){
-    		neighbors.push(new Board(switchTile(zeroX+1, zeroY)));
+    		neighbors.push(new Board(switchTile(zeroX, zeroY+1)));//switch zero with tile to the right of it
     	}
     	
     	return neighbors;    	
@@ -282,6 +291,8 @@ public class Board {
 		for (Board m : testBoard4.neighbors()){
 			System.out.println(m.toString());
 		}
+		System.out.println("Original:");
+		System.out.println(testBoard4);
     	
     }//end of main
 }//end of Board
