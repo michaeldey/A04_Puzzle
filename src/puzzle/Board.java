@@ -27,6 +27,7 @@ public class Board {
     	this.N = blocks[0].length;	//set width of the puzzle side
     	this.tiles = blocks;				//set the size of tiles
     	load1DArray();				//loads the oneDArray and sets zeroY and zeroX
+    	
     }
     
     // board size N
@@ -114,10 +115,12 @@ public class Board {
     private boolean isRight(){return (zeroX==(N-1));}	//returns true if 0 is on right side
     
     //switchTile clones tiles[][], and switches the value at zeroX,zeroY with value at xSwitch,ySwitch
-    private int[][] switchTile(int xSwitch, int ySwitch)
+    private int[][] switchTile(int ySwitch, int xSwitch)
     {
+//    	System.out.println("switchTile ln: 1");
     	int[][] returnValue = new int[N][N]; //make a copy of tiles
     	
+//    	System.out.println("switchTile ln: 2");
     	for (int i = 0; i <tiles.length;i++)
     	{
     		for (int j = 0; j<tiles[1].length; j++)
@@ -126,8 +129,11 @@ public class Board {
     		}
     	}
     	
-    	returnValue[zeroX][zeroY] = returnValue[xSwitch][ySwitch]; //copy value of xSwitch ySwitch into position of zeroX,zeroY
-    	returnValue[xSwitch][ySwitch]=0;	// copy value of 0 into position xSwitch, ySwitch
+//    	System.out.println("switchTile ln: 3");
+    	int temp = returnValue[ySwitch][xSwitch];
+    	returnValue [zeroY][zeroX] = temp;
+    	returnValue [ySwitch][xSwitch] = 0;
+    	
     	return returnValue;
     }
     
@@ -136,16 +142,16 @@ public class Board {
     {		
     	neighborsIterator neighbors = new neighborsIterator();
     	if (!isTop()){
-    		neighbors.push(new Board(switchTile(zeroX-1, zeroY))); //switch zero with tile above it
+    		neighbors.push(new Board(switchTile(zeroY-1, zeroX))); //switch zero with tile above it
     	}
     	if (!isBottom()){
-    		neighbors.push(new Board(switchTile(zeroX+1, zeroY)));//switch zero with tile below it
+    		neighbors.push(new Board(switchTile(zeroY+1, zeroX)));//switch zero with tile below it
     	}
     	if (!isLeft()){
-    		neighbors.push(new Board(switchTile(zeroX, zeroY-1)));//switch zero with tile to the left of it
+    		neighbors.push(new Board(switchTile(zeroY, zeroX-1)));//switch zero with tile to the left of it
     	}
     	if (!isRight()){
-    		neighbors.push(new Board(switchTile(zeroX, zeroY+1)));//switch zero with tile to the right of it
+    		neighbors.push(new Board(switchTile(zeroY, zeroX+1)));//switch zero with tile to the right of it
     	}
     	
     	return neighbors;    	
@@ -213,22 +219,30 @@ public class Board {
     {
     	//load oneDArray
     	oneDArray = new int[size()-1]; //minus 1 to account for skipping the 0
+
     	int pointer = 0;
-    	for (int i = 0; i<N; i++)
+    	for (int i = 0; i<tiles.length; i++)
     	{
-    		for (int j=0; j<N; j++)
+    		for (int j=0; j<tiles.length; j++)
     		{
     			//load the array, but skip if the value==0
     			if (tiles[i][j]!=0)
     			{
     				oneDArray[pointer++]=tiles[i][j];
+//    				System.out.printf("Tile %d %d set to: %d\n", i, j, oneDArray[pointer-1]);
     			}else
-    			{
+    			{    				
     				zeroY = i; 	//Set Y value of 0 point
     				zeroX = j;	//Set X value of 0 point
+//    				System.out.println("Zero points have been set");
     			}
     		}
     	}
+//    	for (int m : oneDArray)
+//    	{
+//    		System.out.print(m + " ");
+//    	}
+//    	System.out.println();
     }
     
     //calculate the number of inversions
@@ -249,10 +263,10 @@ public class Board {
     // unit tests (not graded)
     public static void main(String[] args) {
 //    	int[][] testArray = {{1,2,3},{4,0,6},{7,8,5}};	//create 3 by 3 array
-////    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,15,11},{13,14,0,12}};	//create 4 by 4 array
-//    	Board testBoard = new Board(testArray);
+    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};	//create 4 by 4 array
+    	Board testBoard = new Board(testArray);
 //    	System.out.println("Size: " + testBoard.size());	//test size method
-//    	
+    	
 //    	System.out.print("inversions:");
 //    	System.out.println(testBoard.inversions());
 //    	System.out.println("Zero Row: " + testBoard.zeroY);
@@ -278,21 +292,17 @@ public class Board {
 //    	System.out.println("Left:" + testBoard.isLeft());
 //    	System.out.println("Right:" + testBoard.isRight());
     	
-    	//Testing iterator
+//    	//Testing iterator
+    	System.out.println("Original");
+    	System.out.println(testBoard.toString());
     	System.out.println("Testing neighbors");
-    	int[][] testArray4 = {{1,2,3},{4,0,6},{7,8,5}};	//create 3 by 3 array
-		Board testBoard4 = new Board(testArray4);
 
-		System.out.println("Original:");
-		System.out.println(testBoard4);
 		System.out.println("Neighbors:");
 		
 
-		for (Board m : testBoard4.neighbors()){
+		for (Board m : testBoard.neighbors()){
 			System.out.println(m.toString());
 		}
-		System.out.println("Original:");
-		System.out.println(testBoard4);
     	
     }//end of main
 }//end of Board
