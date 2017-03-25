@@ -126,7 +126,16 @@ public class Board {
     {		
     	neighborsIterator neighbors = new neighborsIterator();
     	if (!isTop()){
-    		neighbors.add(new Board(switchTile(zeroX, zeroY-1)));
+    		neighbors.next =(new Board(switchTile(zeroX, zeroY-1)));
+    	}
+    	if (!isBottom()){
+    		neighbors.next =(new Board(switchTile(zeroX, zeroY+1)));
+    	}
+    	if (!isLeft()){
+    		neighbors.next =(new Board(switchTile(zeroX-1, zeroY)));
+    	}
+    	if (!isRight()){
+    		neighbors.next =(new Board(switchTile(zeroX+1, zeroY)));
     	}
     	
     	return (Iterable<Board>) neighbors;    	
@@ -134,17 +143,16 @@ public class Board {
     
     private class neighborsIterator implements Iterator<Board>
     {
+    	private Board next=null;
 
 		@Override
 		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return false;
+			return (next==null);
 		}
 
 		@Override
 		public Board next() {
-			// TODO Auto-generated method stub
-			return null;
+			return next;
 		}
     	
     }
