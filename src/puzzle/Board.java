@@ -126,16 +126,16 @@ public class Board {
     {		
     	neighborsIterator neighbors = new neighborsIterator();
     	if (!isTop()){
-    		neighbors.next =(new Board(switchTile(zeroX, zeroY-1)));
+    		neighbors.push(new Board(switchTile(zeroX, zeroY-1)));
     	}
     	if (!isBottom()){
-    		neighbors.next =(new Board(switchTile(zeroX, zeroY+1)));
+    		neighbors.push(new Board(switchTile(zeroX, zeroY+1)));
     	}
     	if (!isLeft()){
-    		neighbors.next =(new Board(switchTile(zeroX-1, zeroY)));
+    		neighbors.push(new Board(switchTile(zeroX-1, zeroY)));
     	}
     	if (!isRight()){
-    		neighbors.next =(new Board(switchTile(zeroX+1, zeroY)));
+    		neighbors.push(new Board(switchTile(zeroX+1, zeroY)));
     	}
     	
     	return (Iterable<Board>) neighbors;    	
@@ -143,16 +143,40 @@ public class Board {
     
     private class neighborsIterator implements Iterator<Board>
     {
-    	private Board next=null;
-
+    	private Node first = null;
+    	private Node current = first;
+    	
+    	private class Node
+    	{
+    		Board item;
+    		Node next;
+    	}    	
+    	
+    	private void push(Board item)
+    	{
+    		Node oldFirst = first;
+    		first = new Node();
+    		first.item = item;
+    		first.next = oldFirst;
+    	}
+    	
+    	private Board pop()
+    	{
+    		Board item = first.item;
+    		first = first.next;
+    		return item;
+    	}
+    	
 		@Override
 		public boolean hasNext() {
-			return (next==null);
+			return (current!=null);
 		}
 
 		@Override
 		public Board next() {
-			return next;
+			Board item = current.item;
+			current = current.next;
+			return item;
 		}
     	
     }
