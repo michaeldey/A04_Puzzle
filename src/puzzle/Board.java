@@ -2,6 +2,7 @@ package puzzle;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
@@ -138,50 +139,50 @@ public class Board {
     		neighbors.push(new Board(switchTile(zeroX+1, zeroY)));
     	}
     	
-    	return (Iterable<Board>) neighbors;    	
+    	return neighbors;    	
     }
     
-    private class neighborsIterator implements Iterator<Board>
+    private class neighborsIterator <Board> implements Iterable<Board>
     {
-    	private Node first = null;
-    	private Node current = first;
+    	private Node firstNode;
     	
     	private class Node
     	{
     		Board item;
     		Node next;
-    	}    	
+    	}
+    	
+    	public Iterator<Board> iterator()  
+    	{
+    		return new ListIterator();
+    	}
     	
     	private void push(Board item)
     	{
-    		Node oldFirst = first;
-    		first = new Node();
-    		first.item = item;
-    		first.next = oldFirst;
+    		Node oldFirst = firstNode;
+    		firstNode = new Node();
+    		firstNode.item = item;
+    		firstNode.next = oldFirst;
     	}
     	
-    	private Board pop()
+    	/**
+    	 * Helper iterator that returns the stack
+    	 */
+    	private class ListIterator implements Iterator<Board>
     	{
-    		Board item = first.item;
-    		first = first.next;
-    		return item;
-    	}
-    	
-		@Override
-		public boolean hasNext() {
-			return (current!=null);
-		}
+    		private Node current = firstNode;
+            public boolean hasNext()  { return current != null;                     }
+//            public void remove()      { throw new UnsupportedOperationException();  }
 
-		@Override
-		public Board next() {
-			Board item = current.item;
-			current = current.next;
-			return item;
-		}
-    	
+            public Board next() {
+                if (!hasNext()) throw new NoSuchElementException();
+                Board item = current.item;
+                current = current.next; 
+                return item;
+            }
+    	}
     }
-    
-    
+      
     // string representation of this board (in the output format specified below)
     @Override
     public String toString() {
@@ -238,34 +239,49 @@ public class Board {
     
     // unit tests (not graded)
     public static void main(String[] args) {
-    	int[][] testArray = {{4,3,1},{7,0,8},{6,5,2}};	//create 3 by 3 array
-//    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,15,11},{13,14,0,12}};	//create 4 by 4 array
-    	Board testBoard = new Board(testArray);
-    	System.out.println("Size: " + testBoard.size());	//test size method
+//    	int[][] testArray = {{1,2,3},{4,0,6},{7,8,5}};	//create 3 by 3 array
+////    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,15,11},{13,14,0,12}};	//create 4 by 4 array
+//    	Board testBoard = new Board(testArray);
+//    	System.out.println("Size: " + testBoard.size());	//test size method
+//    	
+//    	System.out.print("inversions:");
+//    	System.out.println(testBoard.inversions());
+//    	System.out.println("Zero Row: " + testBoard.zeroY);
+//    	System.out.println("Solvable: " + testBoard.isSolvable());  
+//    	System.out.println(testBoard);
+//    	System.out.println("Zero at location: (" + testBoard.zeroX + "," + testBoard.zeroY + ")");
+//    	
+//    	//testing equals()
+//    	Board testBoard2 = new Board(testArray);
+//    	System.out.println("Testing Equals on equal boards:");
+//    	System.out.println(testBoard.equals(testBoard2));
+//    	
+//    	
+//    	//testing equals()
+//    	int[][] testArray3 = {{1,2,3},{8,6,7},{4,5,0}};
+//    	Board testBoard3 = new Board(testArray3);
+//    	System.out.println("Testing Equals on NOT equal boards:");
+//    	System.out.println(testBoard.equals(testBoard3));
+//    	
+//    	//test border checks
+//    	System.out.println("Top:" + testBoard.isTop());
+//    	System.out.println("Bottom:" + testBoard.isBottom());
+//    	System.out.println("Left:" + testBoard.isLeft());
+//    	System.out.println("Right:" + testBoard.isRight());
     	
-    	System.out.print("inversions:");
-    	System.out.println(testBoard.inversions());
-    	System.out.println("Zero Row: " + testBoard.zeroY);
-    	System.out.println("Solvable: " + testBoard.isSolvable());  
-    	System.out.println(testBoard);
-    	System.out.println("Zero at location: (" + testBoard.zeroX + "," + testBoard.zeroY + ")");
+    	//Testing iterator
+    	System.out.println("Testing neighbors");
+    	int[][] testArray4 = {{1,2,3},{4,0,6},{7,8,5}};	//create 3 by 3 array
+		Board testBoard4 = new Board(testArray4);
+
+		System.out.println("Original:");
+		System.out.println(testBoard4);
+		System.out.println("Neighbors:");
+		
+
+		for (Board m : testBoard4.neighbors()){
+			System.out.println(m.toString());
+		}
     	
-    	//testing equals()
-    	Board testBoard2 = new Board(testArray);
-    	System.out.println("Testing Equals on equal boards:");
-    	System.out.println(testBoard.equals(testBoard2));
-    	
-    	
-    	//testing equals()
-    	int[][] testArray3 = {{1,2,3},{8,6,7},{4,5,0}};
-    	Board testBoard3 = new Board(testArray3);
-    	System.out.println("Testing Equals on NOT equal boards:");
-    	System.out.println(testBoard.equals(testBoard3));
-    	
-    	//test border checks
-    	System.out.println("Top:" + testBoard.isTop());
-    	System.out.println("Bottom:" + testBoard.isBottom());
-    	System.out.println("Left:" + testBoard.isLeft());
-    	System.out.println("Right:" + testBoard.isRight());
     }//end of main
 }//end of Board
