@@ -58,7 +58,7 @@ public class BoardTest {
 		int[][] manhattan10 = new int[][]{{8,1,3},{4,0,2},{7,6,5}};
 		Board man10 = new Board(manhattan10);	//create a board with a known Manhattan value of 10
 		assertTrue(man10.manhattan()==10);		//test manhatten value comes back as 10
-		assertFalse(man10.manhattan()!=10);		//test manhatten value doesn't come back as anything BUT 10
+//		assertFalse(man10.manhattan()!=10);		//test manhatten value doesn't come back as anything BUT 10
 	}
 
 	@Test
