@@ -5,6 +5,8 @@
 
 package puzzle;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -27,6 +29,14 @@ public class Board {
      */
     public Board(int[][] blocks) 
     {
+    	if (blocks==null)
+    	{
+    		throw new java.lang.Error("Blocks cannot be null");
+    	}
+    	if (blocks.length<=0)
+    	{
+    		throw new java.lang.Error("Blocks cannot be empty");
+    	}
     	if (blocks[0].length != blocks[1].length)
     	{
     		throw new java.lang.Error("Puzzle width must match Puzzle height");
@@ -75,8 +85,8 @@ public class Board {
     			if (tiles[i][j] != expectedValue && tiles[i][j] != 0) {
     				int actualValue = tiles[i][j];
     				actualValue--;
-    				int goalI = actualValue / size();
-    				int goalJ = actualValue % size();
+    				int goalI = actualValue / N;
+    				int goalJ = actualValue % N;    				
     				value += Math.abs(goalI - i) + Math.abs(goalJ - j);
     			}
     		}
@@ -291,47 +301,64 @@ public class Board {
     
     // unit tests (not graded)
     public static void main(String[] args) {
-//    	int[][] testArray = {{1,2,3},{4,0,6},{7,8,5}};	//create 3 by 3 array
-    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};	//create 4 by 4 array
-    	Board testBoard = new Board(testArray);
-    	System.out.println("Size: " + testBoard.size());	//test size method
+////    	int[][] testArray = {{1,2,3},{4,0,6},{7,8,5}};	//create 3 by 3 array
+//    	int[][] testArray = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};	//create 4 by 4 array
+//    	Board testBoard = new Board(testArray);
+//    	System.out.println("Size: " + testBoard.size());	//test size method
+//    	
+//    	System.out.print("inversions:"); 
+//    	System.out.println(testBoard.inversions());
+//    	System.out.println("Zero Row: " + testBoard.zeroY);
+//    	System.out.println("Solvable: " + testBoard.isSolvable());  
+//    	System.out.println(testBoard);
+//    	System.out.println("Zero at location: (" + testBoard.zeroX + "," + testBoard.zeroY + ")");
+//    	
+//    	//testing equals()
+//    	Board testBoard2 = new Board(testArray);
+//    	System.out.println("Testing Equals on equal boards:");
+//    	System.out.println(testBoard.equals(testBoard2));
+//    	
+//    	
+//    	//testing equals()
+//    	int[][] testArray3 = {{1,2,3},{8,6,7},{4,5,0}};
+//    	Board testBoard3 = new Board(testArray3);
+//    	System.out.println("Testing Equals on NOT equal boards:");
+//    	System.out.println(testBoard.equals(testBoard3));
+//    	
+//    	//test border checks
+//    	System.out.println("Top:" + testBoard.isTop());
+//    	System.out.println("Bottom:" + testBoard.isBottom());
+//    	System.out.println("Left:" + testBoard.isLeft());
+//    	System.out.println("Right:" + testBoard.isRight());
+//    	
+//    	//Testing iterator
+//    	System.out.println("Original");
+//    	System.out.println(testBoard.toString());
+//    	System.out.println("Testing neighbors");
+//
+//		System.out.println("Neighbors:");
+//		
+//
+//		for (Board m : testBoard.neighbors()){
+//			System.out.println(m.toString());
+//		}
+//
+//		int[][] testArray5 = {{1,2,3},{4,5,6},{7,8,0}};	//create 3 by 3 array
+//		Board testBoard5 = new Board(testArray5);
+//		System.out.println(testBoard5);
+//		System.out.printf("3\n 1  2  3\n 4  5  6\n 7  8  0 \n");
     	
-    	System.out.print("inversions:");
-    	System.out.println(testBoard.inversions());
-    	System.out.println("Zero Row: " + testBoard.zeroY);
-    	System.out.println("Solvable: " + testBoard.isSolvable());  
-    	System.out.println(testBoard);
-    	System.out.println("Zero at location: (" + testBoard.zeroX + "," + testBoard.zeroY + ")");
-    	
-    	//testing equals()
-    	Board testBoard2 = new Board(testArray);
-    	System.out.println("Testing Equals on equal boards:");
-    	System.out.println(testBoard.equals(testBoard2));
-    	
-    	
-    	//testing equals()
-    	int[][] testArray3 = {{1,2,3},{8,6,7},{4,5,0}};
-    	Board testBoard3 = new Board(testArray3);
-    	System.out.println("Testing Equals on NOT equal boards:");
-    	System.out.println(testBoard.equals(testBoard3));
-    	
-    	//test border checks
-    	System.out.println("Top:" + testBoard.isTop());
-    	System.out.println("Bottom:" + testBoard.isBottom());
-    	System.out.println("Left:" + testBoard.isLeft());
-    	System.out.println("Right:" + testBoard.isRight());
-    	
-    	//Testing iterator
-    	System.out.println("Original");
-    	System.out.println(testBoard.toString());
-    	System.out.println("Testing neighbors");
-
-		System.out.println("Neighbors:");
-		
-
-		for (Board m : testBoard.neighbors()){
-			System.out.println(m.toString());
-		}
+    	System.out.println("Testing Manhattan 10:");
+    	int[][] manhattan10 = new int[][]{{8,1,3},{4,0,2},{7,6,5}};
+		Board man10 = new Board(manhattan10);	//create a board with a known Manhattan value of 10
+		System.out.println(man10.toString());
+		System.out.println(man10.manhattan());
+		System.out.println();
+    	System.out.println("Testing Manhattan 7:");
+    	int[][] manhattan7 = new int[][]{{1,0,2},{3,4,6},{7,8,5}};
+		Board man7 = new Board(manhattan7);	//create a board with a known Manhattan value of 7
+		System.out.println(man7.toString());
+		System.out.println(man7.manhattan());
     	
     }//end of main
 }//end of Board
