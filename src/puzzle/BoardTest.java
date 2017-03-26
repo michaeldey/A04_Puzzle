@@ -55,8 +55,8 @@ public class BoardTest {
 
 	@Test
 	public void testManhattan() {
-		int[][] manhatten10 = new int[][]{{8,1,3},{4,0,2},{7,6,5}};
-		Board man10 = new Board(manhatten10);	//create a board with a known Hamming value of 10
+		int[][] manhattan10 = new int[][]{{8,1,3},{4,0,2},{7,6,5}};
+		Board man10 = new Board(manhattan10);	//create a board with a known Manhattan value of 10
 		assertTrue(man10.manhattan()==10);		//test manhatten value comes back as 10
 		assertFalse(man10.manhattan()!=10);		//test manhatten value doesn't come back as anything BUT 10
 	}
@@ -131,7 +131,70 @@ public class BoardTest {
 
 	@Test
 	public void testNeighbors() {
-		fail("Not yet implemented");
+		int[][] testArray = new int[][]{{1,2,3},{4,0,6},{7,8,5}}; //original position
+		int[][] rightArray = new int[][]{{1,2,3},{4,6,0},{7,8,5}};//0 moved right
+		int[][] leftArray = new int[][]{{1,2,3},{0,4,6},{7,8,5}}; //0 moved left								
+		int[][] downArray = new int[][]{{1,2,3},{4,8,6},{7,0,5}}; //0 moved down										
+		int[][] upArray = 	new int[][]{{1,0,3},{4,2,6},{7,8,5}}; //0 moved up						
+		
+		Board orig = new Board(testArray);
+		Board right = new Board(rightArray);
+		Board left = new Board(leftArray);
+		Board down = new Board(downArray);
+		Board up = new Board(upArray);
+		
+		boolean leftPass = false;
+		boolean leftTriggered = false;
+		boolean rightPass = false;
+		boolean rightTriggered = false;
+		boolean downPass = false;
+		boolean downTriggered = false;
+		boolean upPass = false;
+		boolean upTriggered = false;
+		int count = 0;
+		
+		//iterate through all neighbors, check if they are all equal to their respective movements
+		//the int "count" counts the number of neighbors that were created
+		//the "trigger" values can only be set to true once, so if any direction gets multiple .equal values, the test fails
+		for (Board m : orig.neighbors())
+		{
+			if (m.equals(right))
+			{
+				if (!rightPass && !rightTriggered){
+					rightPass = true; 		//if rightPass has already been triggered true, then multiple trues is a fail
+					rightTriggered = true;
+				}
+				else rightPass=false;
+			}
+			if (m.equals(left))
+			{
+				if (!leftPass && !leftTriggered){
+					leftPass = true; 		//if leftPass has already been triggered true, then multiple trues is a fail
+					leftTriggered = true;
+				}
+				else leftPass=false;
+			}
+			if (m.equals(down))
+			{
+				if (!downPass && !downTriggered){
+					downPass=true;			//if downPass has already been triggered true, then multiple trues is a fail
+					downTriggered = true;
+				}
+				else downPass = false;
+			}
+			if (m.equals(up))
+			{
+				if (!upPass && !upTriggered){
+					upPass=true;			//if downPass has already been triggered true, then multiple trues is a fail
+					upTriggered=true;
+				}
+				else upPass = false;
+			}
+			count++; 						//count should increment 4 times (one for each direction)
+		}		
+		
+		assertTrue((rightPass==true) && (leftPass == true) && (downPass == true) && (upPass == true) && (count==4));
+		
 	}
 
 
