@@ -20,7 +20,7 @@ Public methods:
 	size() - returns the size of the array 
 	hamming() - calculates the number of blocks out of place
 	manhattan() - sum of all the distances of out of place blocks to their respective goal positions
-	isGoal() - returns true of the puzzle is in the solved state, false if not
+	isGoal() - returns true if the puzzle is in the solved state, false if not
 	isSolvable() - calculates if the given board is solvable and returns true if it is solvable, false if not
 	equals() -	takes in a board to compare, then compares the toString() values, if they are equal, the boards are equal
 	neighbors() - creates boards that represent the (up to) 4 possible moves and returns them as an iterator
@@ -74,14 +74,14 @@ Order of growth of running time:
                   number of          seconds
      instance       moves      Hamming     Manhattan
    ------------  ----------   ----------   ----------
-   puzzle28.txt      28			.55
-   puzzle30.txt      30			.96
-   puzzle32.txt      32			9.22
-   puzzle34.txt      34			3.84
-   puzzle36.txt      36        43.95
-   puzzle38.txt      38        24.17
-   puzzle40.txt      40         7.79
-   puzzle42.txt      42        39.65
+   puzzle28.txt      28			.55			.54			
+   puzzle30.txt      30			.96			.94			
+   puzzle32.txt      32			9.22		9.34		
+   puzzle34.txt      34			3.84		4.00	
+   puzzle36.txt      36        43.95		45.22		
+   puzzle38.txt      38        23.94		23.41		
+   puzzle40.txt      40         7.34		7.54	
+   puzzle42.txt      42        39.62		38.03		
 
 
 
@@ -125,9 +125,9 @@ None
  *  Describe any serious problems you encountered.                    
  *****************************************************************************/
 My biggest problem was understanding how to return an Iterator in a format that
-Solver was expecting.  
+Solver was expecting.  -Mike
 
-Mine was figuring out Minpq and how to implement properly to solve the boards.
+Mine was figuring out Minpq and how to implement properly to solve the boards. -Chad
 
 /******************************************************************************
  *  If you worked with a partner, assert below that you followed
