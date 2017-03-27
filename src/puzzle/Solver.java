@@ -1,9 +1,13 @@
+/**
+ * @author Chad Seale, Michael Dey
+ * CSIS2420-004-Sp17 - A04 - 8 Puzzle 
+ */
 package puzzle;
 
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.introcs.In;
-import edu.princeton.cs.introcs.StdOut;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 	
