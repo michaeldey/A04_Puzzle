@@ -31,7 +31,9 @@ Public methods:
  *  (board + number of moves + previous search node).
  *****************************************************************************/
 
-
+I created a search node named MoveBoard creating it as a private class inside solver seemed like the best way to go about it.  
+It took in a board, moves to get that board, and a mainBoard. It contains the mainBoard so that can be used to follow 
+the moves to solve the board also keeps track of it so it doesn't get moved back to the queue.
 
 
 
@@ -72,14 +74,14 @@ Order of growth of running time:
                   number of          seconds
      instance       moves      Hamming     Manhattan
    ------------  ----------   ----------   ----------
-   puzzle28.txt 
-   puzzle30.txt 
-   puzzle32.txt 
-   puzzle34.txt 
-   puzzle36.txt 
-   puzzle38.txt 
-   puzzle40.txt 
-   puzzle42.txt 
+   puzzle28.txt      28
+   puzzle30.txt      30
+   puzzle32.txt      32
+   puzzle34.txt      34
+   puzzle36.txt      36       not solved
+   puzzle38.txt      38       not solved
+   puzzle40.txt      40       not solved
+   puzzle42.txt      42       not solved
 
 
 
@@ -106,6 +108,7 @@ The inversion calculator runs in O(n^2) time.
 
 public Iterator<Board> iterator()  is public because I can't reduce the visibility of an inherited method
 
+Also memory seems to be a large limitation.
 
 /******************************************************************************
  *  Describe whatever help (if any) that you received.
@@ -114,7 +117,7 @@ public Iterator<Board> iterator()  is public because I can't reduce the visibili
  *  classmates, and friends) and attribute them by name.
  *****************************************************************************/
 
-
+None
 
 
 
@@ -124,6 +127,7 @@ public Iterator<Board> iterator()  is public because I can't reduce the visibili
 My biggest problem was understanding how to return an Iterator in a format that
 Solver was expecting.  
 
+Mine was figuring out Minpq and how to implement properly to solve the boards.
 
 /******************************************************************************
  *  If you worked with a partner, assert below that you followed
