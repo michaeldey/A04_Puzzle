@@ -18,11 +18,11 @@ public class Solver {
     	}
     	
 		solution = new Stack<>();
-		MinPQ<Move> q = new MinPQ<>();
-		q.insert(new Move(initial, 0, null));
+		MinPQ<MoveBoard> q = new MinPQ<>();
+		q.insert(new MoveBoard(initial, 0, null));
 		
 		while(true){
-			Move move = q.delMin();
+			MoveBoard move = q.delMin();
 			if(move.board.isGoal()){ //goal has been reached, populate fields of interest and return
 				this.moves = move.moves;
 				do{
@@ -34,7 +34,7 @@ public class Solver {
 			}
 			for(Board next : move.board.neighbors()){
 				if(move.mainBoard == null || !next.equals(move.mainBoard.board)) //look back one move to prevent useless looping
-					q.insert(new Move(next, move.moves+1, move));
+					q.insert(new MoveBoard(next, move.moves+1, move));
 			}
 		}
     	
@@ -54,19 +54,19 @@ public class Solver {
     }
     
     
-    private class Move implements Comparable<Move>{
+    private class MoveBoard implements Comparable<MoveBoard>{
 		private Board board;
 		private int moves;
-		private Move mainBoard;
+		private MoveBoard mainBoard;
 		
-		public Move(Board board, int moves, Move mainBoard){
+		public MoveBoard(Board board, int moves, MoveBoard mainBoard){
 			this.board = board;
 			this.moves = moves;
 			this.mainBoard = mainBoard;
 		}
 
 		@Override
-		public int compareTo(Move o) {
+		public int compareTo(MoveBoard o) {
 			int difference = this.board.manhattan() + this.moves - o.board.manhattan() - o.moves;
 			
 			if (difference != 0) {
@@ -111,3 +111,4 @@ public class Solver {
         
     }
 }
+
