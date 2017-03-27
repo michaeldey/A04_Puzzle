@@ -101,7 +101,8 @@ public class Board {
      */
     public boolean isGoal() 
     {
-		return hamming() == 0;    	
+//		return hamming() == 0;		//switch between the two to get timing in ReadMe.txt
+    	return manhattan() == 0;
     }
     
     /**
@@ -298,7 +299,7 @@ public class Board {
     	}
     	return inversions;
     }
-    
+     
     // unit tests (not graded)
     public static void main(String[] args) {
 ////    	int[][] testArray = {{1,2,3},{4,0,6},{7,8,5}};	//create 3 by 3 array
@@ -348,17 +349,25 @@ public class Board {
 //		System.out.println(testBoard5);
 //		System.out.printf("3\n 1  2  3\n 4  5  6\n 7  8  0 \n");
     	
-    	System.out.println("Testing Manhattan 10:");
-    	int[][] manhattan10 = new int[][]{{8,1,3},{4,0,2},{7,6,5}};
-		Board man10 = new Board(manhattan10);	//create a board with a known Manhattan value of 10
-		System.out.println(man10.toString());
-		System.out.println(man10.manhattan());
-		System.out.println();
-    	System.out.println("Testing Manhattan 7:");
-    	int[][] manhattan7 = new int[][]{{1,0,2},{3,4,6},{7,8,5}};
-		Board man7 = new Board(manhattan7);	//create a board with a known Manhattan value of 7
-		System.out.println(man7.toString());
-		System.out.println(man7.manhattan());
+//    	System.out.println("Testing Manhattan 10:");
+//    	int[][] manhattan10 = new int[][]{{8,1,3},{4,0,2},{7,6,5}};
+//		Board man10 = new Board(manhattan10);	//create a board with a known Manhattan value of 10
+//		System.out.println(man10.toString());
+//		System.out.println(man10.manhattan());
+//		System.out.println();
+//    	System.out.println("Testing Manhattan 7:");
+//    	int[][] manhattan7 = new int[][]{{1,0,2},{3,4,6},{7,8,5}};
+//		Board man7 = new Board(manhattan7);	//create a board with a known Manhattan value of 7
+//		System.out.println(man7.toString());
+//		System.out.println(man7.manhattan());
+    	
+//    	int[][] inv = new int[][]{	{0,1,3},
+//    								{4,2,5},
+//    								{7,8,6}};
+    	int[][] inv = new int[][]{{1,2,3,4},{5,0,6,8},{9,10,7,11}, {13,14,15,12}};
+    	
+    	Board testInv = new Board(inv);
+    	System.out.println("Inversions: " + testInv.inversions());
     	
     }//end of main
 }//end of Board
